@@ -6,17 +6,29 @@
   VOUT B will be set to 5V - VOUT A
   VOUT A will be read on A1 and VOUT B on A2
   
-  The circuit:
+  Pins on LTC1661:
+
+  1 CS/LD chip selct -> D10
+  2 SCK -> D13 (SCK pin)
+  3 DIN -> D11 (MOSI pin)
+  4 REF -> 0V <= VREF <= VCC (to Arduino +5V)
+  5 VOUT B -> A2
+  6 VCC -> Supply Voltage 2.7V to 5.5V
+  7 GND -> GND
+  8 VOUT A -> A1
+     ___ 
+  1 | u | 8 
+  2 |   | 7 
+  3 |   | 6 
+  4 |___| 5 
+  
+  The rest of circuit:
   * A0 to potentiometer
-  * GND to Ground
-  * REF and VCC to +5V
-  * CS/LD - to digital pin 10  (SS pin)
-  * DIN - to digital pin 11 (MOSI pin)
-  * SCK - to digital pin 13 (SCK pin)
   
   created 9 Feb 2014
   by Stefan Wallnoefer
-    
+  for other librarys and sketches look at
+  https://github.com/walle86/ 
 */
 
 #include <SPI.h>
@@ -34,7 +46,7 @@ long lastPrint = 0;
 
 void setup() {
   
-  dac.loUp(0,0); //set both outputs of the LTC1661 to 0 (GND);
+  dac.loUp(0); //set both outputs of the LTC1661 to 0 (GND);
 
   //set INPUT pins
   pinMode(potiPin, INPUT);
@@ -71,12 +83,12 @@ void loop(){
      1)  dac.loUpA(u1Write);
          dac.loUpB(u2Write);
      
-     2)  dac.loUpCH(u1Write,0);  0 could also be 'A'
-         dac.loUpCH(u1Write,1);  1 could also be 'B'
+     2)  dac.loUpCH(0, u1Write);  0 could also be 'A'
+         dac.loUpCH(1, u2Write);  1 could also be 'B'
      
      */
 
-    delayMicroseconds(25); //delay to get the outputs to ther wanted Values (20us for 90% stepdown + 5us)
+    delayMicroseconds(30); //delay the Output settling time
     
     //read and print outputs of LTC1661
     u1Read = analogRead(u1Pin);

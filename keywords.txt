@@ -13,9 +13,11 @@ LTC1661	KEYWORD1
 ###########################################
 
 getCSPin	KEYWORD2
+setCSPin	KEYWORD2
 sleep	KEYWORD2
 wakeUp	KEYWORD2
 update	KEYWORD2
+dWrite	KEYWORD2
 loadA	KEYWORD2
 loadB	KEYWORD2
 loUpA	KEYWORD2

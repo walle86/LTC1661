@@ -5,15 +5,13 @@
   represents it on VOUT A of the LTC1661
   VOUT B will be set to 5V - VOUT A
   VOUT A will be read on A1 and VOUT B on A2
-  
-  The Outputs will only be updated after a 'U' was send.
-  Send a 'S' to set it in sleep mode, and a 'W' to wake it up.
+  This time with custom SPI pins
   
   Pins on LTC1661:
 
-  1 CS/LD chip selct -> D10
-  2 SCK -> D13 (SCK pin)
-  3 DIN -> D11 (MOSI pin)
+  1 CS/LD chip selct -> D2
+  2 SCK -> D3
+  3 DIN -> D4
   4 REF -> 0V <= VREF <= VCC (to Arduino +5V)
   5 VOUT B -> A2
   6 VCC -> Supply Voltage 2.7V to 5.5V
@@ -34,21 +32,24 @@
   https://github.com/walle86/ 
 */
 
-#include <SPI.h>
+#include <SPI.h>  //had to be included because it is part of the lib, although we dont use it
 #include <LTC1661.h>
 
-#define chipSelect 10
+#define CS 2
+#define SCK 3
+#define DIN 4
 
-LTC1661 dac(chipSelect);    //creats an instance with chipSelect as CS Pin
+LTC1661 dac(CS, DIN, SCK);    //creats an instance with custom SPI pins
 
 int potiPin = A0, u1Pin = A1, u2Pin = A2;  //Inputpins
 int potiRead = 0, potiLast = -10, u1Read = 0, u2Read = 0, u1Write = 0, u2Write = 0;  //read and write Values
 float poti = 0, u1 = 0, u2 = 0;    //Values for printing
 long lastPrint = 0;
-char serIn;
 
 
 void setup() {
+  
+  Serial.begin(9600);
   
   dac.loUp(0); //set both outputs of the LTC1661 to 0 (GND);
 
@@ -57,7 +58,6 @@ void setup() {
   pinMode(u1Pin, INPUT);
   pinMode(u2Pin, INPUT);
 
-  Serial.begin(9600);
   //Print Header
   Serial.println("Poti\tU1\tU2");
 }
@@ -65,7 +65,7 @@ void setup() {
 void loop(){
 
   potiRead = analogRead(potiPin);
-
+  
   //only change and print if differenc to last reading is greater or equal 2 to get not so much prints
   //and more then 100ms to last printing
   if(abs(potiRead - potiLast) >= 2 && millis() - lastPrint >= 100) {
@@ -81,19 +81,19 @@ void loop(){
     u1Write = potiRead;  //U(VOUTA) = U(Poti)
     u2Write = 1023 - potiRead;  //U(VOUTB) = 5V - U(Poti)
 
-    dac.load(u1Write, u2Write);  //send values but not update OUTPUTS
+    dac.loUp(u1Write, u2Write);  //send values and update both OUTPUTS
 
     /* Some other ways to get the same result
-     1)  dac.loadA(u1Write);
-         dac.loadB(u2Write);
+     1)  dac.loUpA(u1Write);
+         dac.loUpB(u2Write);
      
-     2)  dac.loadCH(0, u1Write);  0 could also be 'A'
-         dac.loadCH(1, u2Write);  1 could also be 'B'
+     2)  dac.loUpCH(0, u1Write);  0 could also be 'A'
+         dac.loUpCH(1, u2Write);  1 could also be 'B'
      
      */
 
     delayMicroseconds(30); //delay the Output settling time
-
+    
     //read and print outputs of LTC1661
     u1Read = analogRead(u1Pin);
     u1 = u1Read / 1023.0 * 5.0;
@@ -105,38 +105,5 @@ void loop(){
     Serial.print(u2);
     Serial.println("\t");
   }
-
-  if(Serial.available() > 0){
-    serIn = Serial.read();
-    switch(serIn){
-    case 'U':
-      dac.update();
-      Serial.println("LTC1661 outputs updated");
-      break;
-    case 'W':
-      dac.wakeUp();
-      Serial.println("LTC1661 wake up");
-      break;
-    case 'S':
-      dac.sleep();
-      Serial.println("LTC1661 sleep");
-    }
-    delayMicroseconds(25);
-
-    //read and print all analog inputs
-    potiRead = analogRead(potiPin);
-    poti = potiRead / 1023.0 * 5.0; 
-    u1Read = analogRead(u1Pin);
-    u1 = u1Read / 1023.0 * 5.0;
-    u2Read = analogRead(u2Pin);
-    u2 = u2Read / 1023.0 * 5.0;
-    Serial.print(poti);
-    Serial.print("\t");
-    Serial.print(u1);
-    Serial.print("\t");
-    Serial.print(u2);
-    Serial.println("\t");
-  }      
 }
-
 
