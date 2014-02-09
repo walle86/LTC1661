@@ -1,0 +1,31 @@
+###########################################
+# Syntax Coloring Map For LTC1661.h
+###########################################
+
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
+LTC1661	KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+
+getCSPin	KEYWORD2
+sleep	KEYWORD2
+wakeUp	KEYWORD2
+update	KEYWORD2
+loadA	KEYWORD2
+loadB	KEYWORD2
+loUpA	KEYWORD2
+loUpB	KEYWORD2
+loUp	KEYWORD2
+load	KEYWORD2
+loUp	KEYWORD2
+loadCH	KEYWORD2
+loUpCH	KEYWORD2
+
+###########################################
+# Constants (LITERAL1)
+###########################################
