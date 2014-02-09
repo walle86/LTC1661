@@ -1,6 +1,6 @@
 /* 
 	LTC1661.h - Arduino Library for Linear Technology LTC1661CN8 10bit dual DAC
-	Created by Stefan Wallnoefer, January 8, 2014.
+	Created by Stefan Wallnoefer, Feb 8, 2014.
 	Copyright (c) 2014 Stefan Wallnoefer(walle86) under The MIT License (MIT)
 	
 	This Library provides functions to set both outputs of the LTC1661

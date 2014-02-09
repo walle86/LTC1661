@@ -14,7 +14,7 @@
   * DIN - to digital pin 11 (MOSI pin)
   * SCK - to digital pin 13 (SCK pin)
   
-  created 9 Jan 2014
+  created 9 Feb 2014
   by Stefan Wallnoefer
     
 */

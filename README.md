@@ -2,7 +2,7 @@ LTC1661
 =======
 
 Adruino Library for Linear Technology LTC1661 10bit dual DAC
-Created by Stefan Wallnoefer, January 9, 2014.
+Created by Stefan Wallnoefer, Feb 9, 2014.
 
 This Library provides functions to set both (VOUT A and VOUT B) outputs of the LTC1661
 
